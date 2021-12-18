@@ -4,7 +4,7 @@
 \alias{rdm_mapper}
 \title{Visualizes the environmental resistance to dispersal over a landscape, for individuals in a population}
 \usage{
-rdm_mapper(F.df, Geo_raw, r_size = 5, p_signf = 0.05, p_size = 2,
+rdm_mapper(F.df, Geo_raw, p_signf = 0.05, p_size = 2,
   p_col = "yellow", disp_all_cells = 0, disp_contours = 1)
 }
 \arguments{
@@ -19,9 +19,6 @@ corresponding to the observed resistance. A .csv file with this information is p
 \item{Geo_raw}{A string specifying the path to a text file showing the name (1st column) and geographical x and y 
 coordinates (2nd and 3rd columns) of each individual (each row). The first row needs to specify the column headings, 
 and all entries need to be tab-delimited.}
-
-\item{r_size}{Specifies the size of each grid cell in the plotted raster map of resistances, which can be adjusted 
-to match the size of the plotted landscape. Default value of 5.}
 
 \item{p_signf}{Specifies the percentiles of the null distribution of resistances used to define areas of high and low
 resistance that are statistically significant. In a grid cell, a resistance value that is above the 100*(\code{1-p_signf})\% percentile 
