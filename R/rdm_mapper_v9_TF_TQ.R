@@ -53,13 +53,13 @@ rdm_mapper <- function(F.df, Geo_raw, p_signf = 0.05, p_size = 2, p_col = "yello
   if(disp_contours==0){
     ggplot2::ggplot(F.df, ggplot2::aes(x = x, y = y, colour=resistance)) + 
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(), panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"))+
-      ggplot2::geom_raster(aes(fill=resistance)) +
+      ggplot2::geom_raster(ggplot2::aes(fill=resistance)) +
       ggplot2::scale_fill_gradient2(low="forestgreen", high="red3", mid="white", midpoint=0)+
       ggplot2::geom_point(data = sample.points, cex = p_size, shape = 21, color = "black", fill = p_col,stroke = 2)
   }else{
     ggplot2::ggplot(F.df, ggplot2::aes(x = x, y = y, colour=resistance)) + 
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(), panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"))+
-      ggplot2::geom_raster(aes(fill=resistance)) +
+      ggplot2::geom_raster(ggplot2::aes(fill=resistance)) +
       ggplot2::scale_fill_gradient2(low="forestgreen", high="red3", mid="white", midpoint=0)+
       ggplot2::stat_contour(ggplot2::aes(z = Prob), bins=4, size=1, col="red", breaks = c(p_signf_u))+
       ggplot2::stat_contour(ggplot2::aes(z = Prob), bins=4, size=1, col="green3", breaks = c(p_signf))+
