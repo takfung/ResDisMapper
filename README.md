@@ -1,5 +1,5 @@
 # ResDisMapper
-Resistance of Dispersal Mapper 
+Resistance to Dispersal Mapper 
 
 ## Installation
 
