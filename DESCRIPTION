@@ -1,0 +1,14 @@
+Package: ResDisMapper
+Type: Package
+Title: Calculates and maps environmental resistance to dispersal over a landscape
+Version: 1.1
+Description: Provides functions to (1) Read in genetic data and geographic coordinates for individuals over a landscape, model Isolation by Distance (IBD) and calculate IBD residuals; (2) Plot IBD residuals for pairs of individuals in a population, as represented by line segments over the defined landscape; (3) Calculate environmental resistance to dispersal over the landscape using the IBD residuals and a novel method; and (4) Create a map of the resistance values over the landscape. The novel method of calculating resistance is detailed in Tang et al. (2020).
+Depends: R (>= 3.3.3)
+Imports: adegenet, ggplot2, poppr, raster, rgl, Rmisc, sp
+License: GPL (>= 3)
+Author: Tang Qian, Tak Fung, Frank Rheindt
+Maintainer: Tak Fung <tfung2000@gmail.com>, Tang Qian <tangqiannus@gmail.com>
+Repository: GitHub
+NeedsCompilation: No
+Date: 2021-12-21
+RoxygenNote: 6.0.1
