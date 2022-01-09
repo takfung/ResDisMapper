@@ -13,8 +13,6 @@
 #' @param Geo_raw A string specifying the path to a text file showing the name (1st column) and geographical x and y 
 #'  coordinates (2nd and 3rd columns) of each individual (each row). The first row needs to specify the column headings, 
 #'  and all entries need to be tab-delimited.
-#' @param r_size Specifies the size of each grid cell in the plotted raster map of resistances, which can be adjusted 
-#' to match the size of the plotted landscape. Default value of 5. 
 #' @param p_signf Specifies the percentiles of the null distribution of resistances used to define areas of high and low
 #'  resistance that are statistically significant. In a grid cell, a resistance value that is above the 100*(\code{1-p_signf})\% percentile 
 #'  is considered to be a high resistance that is statistically significant, whereas a resistance value that is below the 
@@ -34,7 +32,7 @@
 #' @export
 #' @import ggplot2
 
-rdm_mapper <- function(F.df, Geo_raw, r_size = 5, p_signf = 0.05, p_size = 2, p_col = "yellow", disp_all_cells = 0, disp_contours = 1){
+rdm_mapper <- function(F.df, Geo_raw, p_signf = 0.05, p_size = 2, p_col = "yellow", disp_all_cells = 0, disp_contours = 1){
 
   sample.points <- read.table(file = Geo_raw, sep = '\t', header = T, row.names = 1, fill = T)
   
@@ -55,14 +53,14 @@ rdm_mapper <- function(F.df, Geo_raw, r_size = 5, p_signf = 0.05, p_size = 2, p_
   if(disp_contours==0){
     ggplot2::ggplot(F.df, ggplot2::aes(x = x, y = y, colour=resistance)) + 
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(), panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"))+
-      ggplot2::geom_point(size = r_size, shape = 15) +
-      ggplot2::scale_color_gradient2(low="forestgreen", high="red3", mid="white", midpoint=0)+
+      ggplot2::geom_raster(ggplot2::aes(fill=resistance)) +
+      ggplot2::scale_fill_gradient2(low="forestgreen", high="red3", mid="white", midpoint=0)+
       ggplot2::geom_point(data = sample.points, cex = p_size, shape = 21, color = "black", fill = p_col,stroke = 2)
   }else{
     ggplot2::ggplot(F.df, ggplot2::aes(x = x, y = y, colour=resistance)) + 
       ggplot2::theme(panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(), panel.background = ggplot2::element_blank(), axis.line = ggplot2::element_line(colour = "black"))+
-      ggplot2::geom_point(size = r_size, shape = 15) +
-      ggplot2::scale_color_gradient2(low="forestgreen", high="red3", mid="white", midpoint=0)+
+      ggplot2::geom_raster(ggplot2::aes(fill=resistance)) +
+      ggplot2::scale_fill_gradient2(low="forestgreen", high="red3", mid="white", midpoint=0)+
       ggplot2::stat_contour(ggplot2::aes(z = Prob), bins=4, size=1, col="red", breaks = c(p_signf_u))+
       ggplot2::stat_contour(ggplot2::aes(z = Prob), bins=4, size=1, col="green3", breaks = c(p_signf))+
       ggplot2::geom_point(data = sample.points, cex = p_size, shape = 21, color = "black", fill = p_col,stroke = 2)
