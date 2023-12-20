@@ -46,52 +46,52 @@
 #' @importFrom Rmisc CI
 
 rdm_resistance <- function(IBD.res, Res_SLDF, nrows = 30, ncols = 30, conf_intervals = 0.95, random_rep = 1000, outputfile = 'resistance_map.csv'){
-
+  
   Res_raster <- raster::raster(raster::extent(Res_SLDF), crs=raster::projection(Res_SLDF), nrows, ncols)
-
+  
   #To calculate the resistance of each grid cell (mean of the IBD residuals corresponding to line segments intersecting the cell).
-
+  
   print("Calculating resistance (1/4)")
-
+  
   Res_mean <- raster::rasterize(Res_SLDF, Res_raster,Res_SLDF@data, fun=mean, progress = 'text')
-
+  
   #To calculate the number of IBD residuals (i.e. intersecting line segments) used to calculate resistance of each grid cell.
-
+  
   print("Counting number of intersecting line segments (2/4)")
-
+  
   Res_count <- raster::rasterize(Res_SLDF, Res_raster, Res_SLDF@data, fun='count', progress = 'text')
-
+  
   #To estimate uncertainty by calculating the confidence interval of resistance in each grid grill.
-
+  
   print("Calculating lower bound of confidence interval (3/4)")
-
+  
   Res_R_ci_L <- raster::rasterize(Res_SLDF, Res_raster, Res_SLDF@data, fun = function(x){L<-Rmisc::CI(x, ci = conf_intervals)
-    return(L[3])}, progress = 'text')
-
+  return(L[3])}, progress = 'text')
+  
   print("Calculating upper bound of confidence interval (4/4)")
-
+  
   Res_R_ci_U<-raster::rasterize(Res_SLDF, Res_raster, Res_SLDF@data,fun = function(x){L<-Rmisc::CI(x, ci = conf_intervals)
-    return(L[1])}, progress = 'text') 
-
+  return(L[1])}, progress = 'text') 
+  
   R.spdf <- as(Res_mean, "SpatialPixelsDataFrame")
   R.df <- as.data.frame(R.spdf)
-
+  
   C.spdf <- as(Res_count, "SpatialPixelsDataFrame")
   C.df <- as.data.frame(C.spdf)
-
+  
   RC.df <- cbind(R.df[,1], C.df)
   RC.df <- RC.df[!(RC.df[,2]==1),]
-
+  
   CI.spdf.l <- as(Res_R_ci_L, "SpatialPixelsDataFrame")
   CI.df.l <- as.data.frame(CI.spdf.l)
-
+  
   CI.spdf.u <- as(Res_R_ci_U, "SpatialPixelsDataFrame")
   CI.df.u <- as.data.frame(CI.spdf.u)
-
+  
   F.df <- cbind(RC.df, CI.df.l[,1], CI.df.u[,1])
-
+  
   F.df [,7] <- sign(F.df[,5]*F.df[,6]) 
-
+  
   Rfunction <- function(x,y){
     iteration <- replicate(random_rep, {
       a<-sample(na.omit(as.numeric(IBD.res)),y)
@@ -99,14 +99,19 @@ rdm_resistance <- function(IBD.res, Res_SLDF, nrows = 30, ncols = 30, conf_inter
     f <- ecdf(iteration)
     return(f(x))
   }
-  Perct <- Rfunction(F.df[,1], F.df[,2])
-
+  
+  Perct <- data.frame()
+  
+  for (i in 1:length(F.df[,1])){
+    Perct[i,1] <- Rfunction(F.df[i,1], F.df[i,2])
+  }
+  
   F.df <- cbind(F.df, Perct)
-
+  
   names(F.df) <- c('resistance', 'intersects', 'x', 'y', 'CI.l', 'CI.u', 'sign.check', 'Prob')
-
+  
   write.csv(F.df, outputfile, row.names=FALSE)
-
+  
   return(F.df)
-
+  
 }
